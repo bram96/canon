@@ -65,3 +65,64 @@
     <button class="btn btn-default" ng-click="addPerson()">Add row</button>
   </div>
 </div>
+<h3>Editable table</h3>
+<div hljs>
+  <table class="table table-condensed table-striped">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Zip</th>
+      <th>City</th>
+      <th>Street</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="person in persons">
+      <td>
+          <span editable-text="person.name" e-name="name" e-form="rowform" e-required>
+            {{person.name}}
+          </span>
+      </td>
+      <td>
+          <span editable-text="person.zipcode" e-name="zipcode" e-form="rowform" e-required>
+            {{person.zipcode}}
+          </span>
+      </td>
+      <td>
+          <span editable-text="person.city" e-name="city" e-form="rowform" e-required>
+            {{person.city}}
+          </span>
+      </td>
+      <td>
+          <span editable-text="person.street" e-name="street" e-form="rowform" e-required>
+          {{person.street}}
+          </span>
+          <span editable-number="person.address" e-name="address" e-form="rowform" e-required>
+            {{person.address}}
+          </span>
+      </td>
+      <td>
+          <span editable-email="person.email" e-name="email" e-form="rowform" e-required>
+            {{person.email}}
+          </span>
+      </td>
+      <td style="white-space: nowrap">
+        <form editable-form name="rowform" onbeforesave="savePerson($data, person._id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == person">
+          <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+            save
+          </button>
+          <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+            cancel
+          </button>
+        </form>
+        <div class="buttons" ng-show="!rowform.$visible">
+          <button class="btn btn-primary" ng-click="rowform.$show()"><i class="fa fa-edit"></i></button>
+          <button class="btn btn-danger" ng-click="removePerson($index)"><i class="fa fa-remove"></i></button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button class="btn btn-default" ng-click="addPerson()">Add row</button>
+</div>

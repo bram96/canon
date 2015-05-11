@@ -81,4 +81,163 @@
     </form>
   </section>
 </div>
+<h3>NodeJS</h3>
+<div hljs>
+  / GET a specific invoice /
+  server.get('/api/invoice/:id', function (req, res, next) {
+    if (ObjectId.isValid(req.params.id)) {
+      //find a invoice by id
+      invoice.findById(req.params.id).populate("products").populate("debiteur").exec(function (err, result) {
+        if (err){
+          res.status(404).json(err);
+        }else {
+          console.log(result);
+          res.status(200).json(result);
+        }
+      })
+    } else {
+      next();
+    }
 
+  }, function (req, res, next) {
+    //find one invoice by invoice number
+    invoice.findOne({number: parseInt(req.params.id)}).populate("products").populate("debiteur").exec(function (err, result) {
+      if (err){
+        res.status(404).json(err);
+      }else {
+        res.status(200).json(result);
+      }
+    })
+  });
+</div>
+<h4>Result (voorbeeld)</h4>
+
+<div hljs>
+   {
+      "_id": "554d002136f5b1bd35833f1a",
+      "debiteur": {
+        "_id": "554cd062786e4be414b15ca4",
+        "name": "Bram Eikelboom",
+        "zipcode": "4535JD",
+        "city": "Terneuzen",
+        "street": "Everingen",
+        "address": 22,
+        "email": "eike0004@hz.nl",
+        "__v": 0
+      }
+      ,
+      "status": "verzonden",
+      "number": 2015003,
+      "__v": 0,
+      "products": [],
+      "invoiceFields": [{"description": "test", "amount": 5, "price": 5, "_id": "554d002136f5b1bd35833f1b"}],
+      "date": "2015-05-18T22:00:00.000Z"
+    }
+</div>
+<h3>Service</h3>
+<div hljs>
+  angular.module('canonApp')
+    .service('Invoice', ['$resource', function ($resource) {
+      return $resource('api/invoice/:id', {}, {
+        query: {method: 'GET', isArray: true},
+        save: {method: 'POST'},
+        delete: {method: 'DELETE'},
+        update: {method: 'PUT'}
+      });
+    }]);
+
+</div>
+<h3>Controller</h3>
+<div hljs>
+    angular.module('canonApp')
+      .controller('InvoiceCtrl', function ($scope, $stateParams, Invoice) {
+        $scope.invoice = Invoice.get({id:$stateParams.id});
+        $scope.total = 0;
+      });
+</div>
+<h3>View</h3>
+<div hljs>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <h1>
+        Invoice
+      </h1>
+      <ol class="breadcrumb">
+        <li><a ui-sref="app.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a ui-sref="app.invoices">Invoices</a></li>
+        <li class="active">{{invoice.number}}</li>
+      </ol>
+    </section>
+    <section class="content">
+      <form ng-submit="save()" novalidate>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="box box-success">
+              <div class="box-header">
+                <h3 class="box-title">Persoonsgegevens</h3>
+              </div>
+              <div class="box-body">
+                {{invoice.debiteur.name}}<br/>
+                {{invoice.debiteur.street}} {{invoice.debiteur.address}}<br/>
+                {{invoice.debiteur.zipcode}} {{invoice.debiteur.city}}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="box box-primary">
+              <div class="box-header">
+                <h3 class="box-title">Factuurgegevens</h3>
+              </div>
+              <div class="box-body">
+                <dl class="dl-horizontal">
+                  <dt>Status</dt>
+                  <dd>{{invoice.status}}</dd>
+                  <dt>Date</dt>
+                  <dd>{{invoice.date|date:"yyyy-mm-dd"}}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box box-warning">
+              <div class="box-header">
+                <h3 class="box-title">Invoice fields</h3>
+              </div>
+              <div class="box-body">
+                <table class="table table-striped">
+                  <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="invoiceField in invoice.invoiceFields">
+                    <td>{{invoiceField.description}}</td>
+                    <td>{{invoiceField.amount}}</td>
+                    <td>{{invoiceField.price|currency:"&euro;"}}</td>
+                    <td ng-init="itemTotal = invoiceField.price*invoiceField.amount; total = total + itemTotal">
+                      {{itemTotal|currency:"&euro;"}}
+                    </td>
+                  </tr>
+                  <tr ng-repeat="product in invoice.products">
+                    <td>{{product.description}}</td>
+                    <td>1</td>
+                    <td>{{product.price|currency:"&euro;"}}</td>
+                    <td ng-init="itemTotal=product.price; total = total + product.price">{{itemTotal|currency:"&euro;"}}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>

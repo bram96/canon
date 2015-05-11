@@ -135,3 +135,35 @@
   <!-- /.content -->
 </div>
 
+<h3>NodeJS</h3>
+<div hljs>
+    / POST add a new invoice /
+    server.post('/api/invoice/', function (req, res, next) {
+      var json = req.body;
+      //find the last invoice number
+      invoice.findOne({}).select({ "number": 1, "_id": 0}).sort('-number').exec(function(err, result){
+        if (err){
+          res.status(404).json(err);
+        }else {
+          //if it exist increment it, otherwise make a new one
+          if (result) {
+            json.number = result.number + 1;
+          } else {
+            json.number = 2015001;
+          }
+
+          //make invoice new collection and save it.
+          new invoice(json).save(function (err) {
+            if (err) {
+              res.status(406).json(err);
+            } else {
+              console.log("inserted json: ");
+              console.log(json);
+              res.sendStatus(200);
+            }
+          })
+        }
+      })
+
+    });
+</div>
