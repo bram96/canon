@@ -1,0 +1,137 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      Nieuw factuur
+    </h1>
+    <ol class="breadcrumb">
+      <li><a ui-sref="app.dashboard"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li><a ui-sref="app.invoices">Facturen</a></li>
+      <li class="active">Nieuw</li>
+    </ol>
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <form ng-submit="save()" novalidate>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box box-success">
+            <div class="box-header">
+              <h3 class="box-title">Persoonsgegevens</h3>
+            </div>
+            <div class="box-body">
+              <div class="form-group">
+                <label> Persoon</label>
+                <select data-role="listview" ng-options="person._id as person.name for person in persons "
+                        ng-model="invoice.debiteur" class="form-control">
+
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="box box-primary">
+            <div class="box-header">
+              <h3 class="box-title">Factuurgegevens</h3>
+            </div>
+            <div class="box-body">
+              <div class="form-group">
+                <div class="form-group">
+                  <label> Status</label>
+                  <select data-role="listview" ng-model="invoice.status" class="form-control">
+                    <option value="betaald">Betaald</option>
+                    <option value="verzonden">Verzonden</option>
+
+                  </select>
+                </div>
+                <label> Datum</label>
+
+                <p class="input-group">
+                  <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="invoice.date"
+                         is-open="opened" datepicker-options="dateOptions" ng-required="true" close-text="Sluiten"/>
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open($event)"><i
+                      class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box box-warning">
+            <div class="box-header">
+              <h3 class="box-title">Invoice fields</h3>
+            </div>
+            <div class="box-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="invoiceField in invoice.invoiceFields track by $index">
+                    <td >
+                      <input type="text" ng-model="invoiceField.description" class="form-control" />
+                    </td>
+                    <td >
+                      <input type="number" ng-model="invoiceField.amount" class="form-control" />
+                    </td>
+                    <td >
+                      <input type="number" ng-model="invoiceField.price" class="form-control" />
+                    </td>
+                    <td>
+                      <button class="btn btn-danger" ng-click="deleteField($index)"><i class="fa fa-remove"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <button class="btn btn-default" ng-click="addField()">Add row</button>
+
+            </div>
+
+            <div class="box-header">
+              <h3 class="box-title">Products</h3>
+            </div>
+            <div class="box-body">
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="product in invoice.products track by $index">
+                  <td><select data-role="listview" ng-options="p._id as p.name for p in products"
+                          ng-model="product._id" class="form-control"></select>
+                  </td>
+                  <td>
+                    <button class="btn btn-danger" ng-click="deleteProduct($index)"><i class="fa fa-remove"></i></button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <button class="btn btn-default" ng-click="addProduct()">Add row</button>
+              <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Concept opslaan">
+              </div>
+
+            </div>
+
+
+            {{invoice|json}}
+          </div>
+        </div>
+      </div>
+    </form>
+  </section>
+  <!-- /.content -->
+</div>
+

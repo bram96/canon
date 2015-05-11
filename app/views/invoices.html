@@ -1,0 +1,96 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="pull-right">
+      <a ui-sref="app.newinvoice" class="btn btn-success">New invoice</a>
+    </div>
+    <h2>Invoices</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-condensed table-striped">
+      <thead>
+      <tr>
+        <th>Number</th>
+        <th>Date</th>
+        <th>Customer</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="invoice in invoices">
+        <td><a ui-sref="app.invoice({id:invoice._id})">{{invoice.number}}</a></td>
+        <td>{{invoice.date|date}}</td>
+        <td>{{invoice.debiteur.name}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<h3>NodeJS</h3>
+<div hljs>
+    / GET list of invoices. /
+    server.get('/api/invoice/', function (req, res, next) {
+      //find all the invoices, and populate it with the corresponding product data
+      invoice.find().populate("products").populate("debiteur").exec(function (err, results) {
+        if (err){
+          res.status(404).json(err);
+        }else {
+          res.status(200).json(results);
+        }
+      })
+    });
+</div>
+<h3>Service</h3>
+<div hljs>
+  <script>
+    angular.module('canonApp')
+      .service('Invoice', ['$resource', function ($resource) {
+        return $resource('api/invoice/:id', {}, {
+          query: {method: 'GET', isArray: true},
+          save: {method: 'POST'},
+          delete: {method: 'DELETE'},
+          update: {method: 'PUT'}
+        });
+      }]);
+  </script>
+</div>
+<h3>Controller</h3>
+<div hljs>
+  <script>
+    angular.module('canonApp')
+      .controller('InvoicesCtrl', function ($scope, Invoice) {
+        $scope.invoices = Invoice.query();
+      });
+  </script>
+</div>
+<h3>View</h3>
+<div hljs>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <a ui-sref="app.newinvoice" class="btn btn-success">New invoice</a>
+      </div>
+      <h2>Invoices</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table table-condensed table-striped">
+        <thead>
+        <tr>
+          <th>Number</th>
+          <th>Date</th>
+          <th>Customer</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="invoice in invoices">
+          <td><a ui-sref="app.invoice({id:invoice._id})">{{invoice.number}}</a></td>
+          <td>{{invoice.date|date:"yyyy-mm-dd"}}</td>
+          <td>{{invoice.debiteur.name}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

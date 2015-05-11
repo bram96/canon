@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2>Products</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-condensed table-striped">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+      </thead>
+      <tbody>
+      <tr ng-repeat="product in products">
+        <td>
+          <span editable-text="product.name" e-name="name" e-form="rowform" e-required>
+            {{product.name}}
+          </span>
+        </td>
+        <td>
+          <span editable-text="product.description" e-name="description" e-form="rowform" e-required>
+            {{product.description}}
+          </span>
+        </td>
+        <td style="white-space: nowrap">
+          <form editable-form name="rowform" onbeforesave="saveProduct($data, product.id)" ng-show="rowform.$visible" class="form-buttons form-inline" >
+            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+              save
+            </button>
+            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+              cancel
+            </button>
+          </form>
+          <div class="buttons" ng-show="!rowform.$visible">
+            <button class="btn btn-primary" ng-click="rowform.$show()"><i class="fa fa-edit"></i></button>
+            <button class="btn btn-danger" ng-click="removeProduct($index)"><i class="fa fa-remove"></i></button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <button class="btn btn-default" ng-click="addProduct()">Add row</button>
+  </div>
+</div>

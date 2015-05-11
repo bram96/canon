@@ -1,0 +1,35 @@
+<table class="table table-striped">
+  <thead>
+    <th>Name</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    <tr ng-repeat="item in array">
+      <td>{{item.name}}</td>
+      <td>{{item.description}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Controller</h3>
+<div hljs>
+  angular.module('canonApp')
+  .controller('NgRepeatCtrl', function ($scope) {
+  $scope.array = [{name: 'name1', description: 'this is a sample description'}, {name: 'name2', description: 'this is another sample description'}]
+  });
+</div>
+<h3>View</h3>
+<div hljs>
+  <table class="table table-striped">
+    <thead>
+    <th>Name</th>
+    <th>Description</th>
+    </thead>
+    <tbody>
+    <tr ng-repeat="item in array">
+      <td>{{item.name}}</td>
+      <td>{{item.description}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
