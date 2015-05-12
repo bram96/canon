@@ -14,4 +14,5 @@ A demo for the presentation. CANON	  CAtchy Name Of Nodejs
 <li>voor Windows gebruikers: set PATH=%PATH%;%PROGRAMFILES(x86)%\Git\bin;%PROGRAMFILES(x86)%\Git\cmd</li>
 <li>bower install</li>
 <li>grunt serve</li>
+<li>Benader de applicatie via http://localhost:9000</li>
 </ul>
